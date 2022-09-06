@@ -1,13 +1,10 @@
-<h3>Ajouter un Article :</h3>
 
+
+<h3>Ajouter un article :</h3>
 <form action="" method="post">
-    <p>Saisir nom article:</p>
+    <p>Saisir le nom de l'article:</p>
     <p><input type="text" name="nom_art"></p>
-    <p> Descriptif :</p>
-    <textarea type="text" name="contenu_art" id="contenu_art" minlength="2" placeholder="Veuillez rédiger ici" required maxlength="300" rows="5" > </textarea>
-    <p>date:</p>
-    <p><input type="date" name="date_art"></p> 
-    <p>Saisir le  code :</p>
-    <p><input type="text" name="valeur_codeAuto"></p>
-    <p><input type="submit" value="ajouter" name="submit"></p>
-</form>
+    <p>Saisir le contenu de l'article</p>
+    <p><textarea name="contenu_art"></textarea></p>
+    <p><select name="id_cat">
+        

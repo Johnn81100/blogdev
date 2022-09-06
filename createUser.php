@@ -22,10 +22,28 @@
             $exist = showUserByMail($bdd, $mail);
             //test si le compte existe
             if(empty($exist)){
+                //test import d'un fichier ( si il existe et si il a un nom)
+                if(isset($_FILES['img_util']) AND $_FILES['img_util']['name'])
+                {
+                    // stockage des valeurs du fichier importé
+                    $name = $_FILES['img_util']['name']; 
+                    $tmpName = $_FILES['img_util']['name']; 
+                    $size = $_FILES['img_util']['name']; 
+                    $error = $_FILES['img_util']['name']; 
+                    $emplacement = './asset/image/'.$name;
+
+                    //appeler  la fonction pour déplacer et renommer un fichier 
+                    move_uploaded_file($tmpName,$emplacement);
+                }
+                //test si aucune image
+                else
+                {
+                    $emplacement = './asset/image/profil.jpg';
+                }
                 //version bcrypt
                 $password = password_hash(cleanInput($_POST['password_util']), PASSWORD_DEFAULT);
                 //fonction ajouter un utilisateur en BDD
-                createUserV3($bdd,$nom, $prenom, $mail, $password);
+                createUserV3($bdd,$nom, $prenom, $mail, $password, $emplacement);
                 //message de confirmation
                 $message = "le compte $nom à été ajouté en BDD";
             }

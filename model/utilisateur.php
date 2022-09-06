@@ -27,14 +27,15 @@
             die('Erreur : '.$e->getMessage());
         }
     }
-    function createUserV3($bdd,$nom, $prenom, $mail, $password){
+    function createUserV3($bdd,$nom, $prenom, $mail, $password, $img){
         try {
             $req = $bdd->prepare("INSERT INTO utilisateur(nom_util, prenom_util, mail_util,
-            password_util)VALUES(?, ?, ?, ?)");
+            password_util, img_util)VALUES(?, ?, ?, ?, ?)");
             $req->bindParam(1, $nom, PDO::PARAM_STR);
             $req->bindParam(2, $prenom, PDO::PARAM_STR);
             $req->bindParam(3, $mail, PDO::PARAM_STR);
             $req->bindParam(4, $password, PDO::PARAM_STR);
+            $req->bindParam(5, $img, PDO::PARAM_STR);
             $req->execute();
         } 
         catch (Exception $e) 
