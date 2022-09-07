@@ -45,8 +45,10 @@
         }
     }
     //fonction qui retourne un tableau associatif d'un utilisateur null (ex :?string)
-    function showUserByMail($bdd, $mail):?array{
-        try {
+    function showUserByMail($bdd, $mail):?array
+    {
+        try 
+        {
             //stocker et évaluer la requête
             $req = $bdd->prepare("SELECT id_util, nom_util, prenom_util,
             mail_util, password_util FROM utilisateur WHERE mail_util = ?");

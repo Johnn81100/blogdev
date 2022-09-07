@@ -33,6 +33,7 @@
     echo '</select></p>
         <p>Saisir date l\'article</p>
         <p><input type="date" name="date_art"></p>
+        <p><input type="file" name="img_art"></p>
         <p><input type="submit" value="ajouter" name="submit"></p>
         </form>';  
     
@@ -41,15 +42,47 @@
     if(isset($_POST['submit'])){
         //test si les champs input sont remplis
         if(!empty($_POST['nom_art']) AND !empty($_POST['contenu_art']) AND
-        !empty($_POST['date_art']) ){
+        !empty($_POST['date_art']) )
+        {
             //stocker les valeurs POST dans des variables
             $nomArticle = cleanInput($_POST['nom_art']);
             $contenuArticle = cleanInput($_POST['contenu_art']);
             $dateArticle = cleanInput($_POST['date_art']);
             $idCat = cleanInput($_POST['id_cat']);
-            createArticleV3($bdd,$nomArticle, $contenuArticle, $dateArticle, $idCat);
-            //message de confirmation
-            $message = "l'article $nomArticle à été ajouté en BDD";
+            $exist = showArtByName($bdd, $nomArticle,  $dateArticle);
+            //test si le compte existe
+            if(empty($exist))
+            {
+                //test bien téléchargé  le fichier
+                if(isset($_FILES['img_art']) AND $_FILES['img_art']['name'])
+                {
+                    // stockage des valeurs du fichier importé
+                    $name = $_FILES['img_art']['name']; 
+                    $tmpName = $_FILES['img_art']['tmp_name']; 
+                    $size = $_FILES['img_art']['size']; 
+                    $error = $_FILES['img_art']['error'];
+                    // variable qui utilisa la fonction pour modifie le  nom du fichier
+                    $ext = get_file_extension($_FILES['img_art']['name']);
+                    // chemin ou  l image  va etre stocké dans la bdd 
+                    $emplacement = './asset/image/'.$nomArticle.$dateArticle."".$ext;
+                    //appeler  la fonction pour déplacer et renommer un fichier 
+                    move_uploaded_file($tmpName,$emplacement);
+                }
+                else
+                {
+                    $emplacement = './asset/image/profil.jpg';
+                }
+
+                createArticleV3($bdd,$nomArticle, $contenuArticle, $dateArticle, $idCat,$emplacement);
+                //message de confirmation
+                $message = "l'article $nomArticle à été ajouté en BDD";
+            }
+            else
+            {
+                
+                 $message = "l'article $nomArticle  existe déja";
+                
+            }
         }
         //test si un ou plusieurs champs ne sont pas remplis
         else{

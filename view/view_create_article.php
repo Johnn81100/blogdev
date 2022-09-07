@@ -1,7 +1,7 @@
 
 
 <h3>Ajouter un article :</h3>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     <p>Saisir le nom de l'article:</p>
     <p><input type="text" name="nom_art"></p>
     <p>Saisir le contenu de l'article</p>

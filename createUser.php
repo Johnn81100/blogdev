@@ -13,7 +13,8 @@
     if(isset($_POST['submit'])){
         //test si les champs input sont remplis
         if(!empty($_POST['nom_util']) AND !empty($_POST['prenom_util']) AND
-        !empty($_POST['mail_util']) AND !empty($_POST['password_util'])){
+        !empty($_POST['mail_util']) AND !empty($_POST['password_util']))
+        {
             //stocker les valeurs POST dans des variables
             $nom = cleanInput($_POST['nom_util']);
             $prenom = cleanInput($_POST['prenom_util']);
@@ -21,9 +22,10 @@
             //récupération du compte si il existe
             $exist = showUserByMail($bdd, $mail);
             //test si le compte existe
-            if(empty($exist)){
+            if(empty($exist))
+            {
                 //test import d'un fichier ( si il existe et si il a un nom)
-                if(isset($_FILES['img_util']) AND $_FILES['img_util']['name'])
+                if(isset($_FILES['img_util']) AND ($_FILES['img_util']['name']))
                 {
                     // stockage des valeurs du fichier importé
                     $name = $_FILES['img_util']['name']; 
@@ -48,7 +50,8 @@
                 $message = "le compte $nom à été ajouté en BDD";
             }
             //test sinon le compte existe
-            else{
+            else
+            {
                 $message = "le compte existe déja";
             }
         }

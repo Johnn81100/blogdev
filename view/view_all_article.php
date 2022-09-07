@@ -1,7 +1,7 @@
 <h2>Bienvenue sur le blog</h2>
 
 <h3>Liste des articles :</h3>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     <select name="filter">
         <option value="asc"selected>ASC</option>
         <option value="desc">DESC</option>
