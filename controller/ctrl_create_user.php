@@ -2,8 +2,7 @@
     $namePage = "Create User";
     $message = "";
     //import des ressources
-    include './utils/bddConnect.php';
-    include './utils/functions.php';
+    include './id_smtp.php';
     include './model/utilisateur.php';
     include './view/view_header.php';
     include './view/view_navbar.php';
@@ -45,8 +44,15 @@
                 //version bcrypt
                 $password = password_hash(cleanInput($_POST['password_util']), PASSWORD_DEFAULT);
                 //fonction ajouter un utilisateur en BDD
-                createUserV3($bdd,$nom, $prenom, $mail, $password, $emplacement);
-                //message de confirmation
+                createUserV3($bdd,$nom, $prenom, $mail, $password, $emplacement, 0);
+                //variable pour la création du mail: 
+                //objet du message 
+                $subject = utf8_decode(("autorisation du blog"));
+                //contenu du  mail :
+                $emailMessage = "<p>Pour activer votre compte blog, 
+                veuillez cliquer sur le lien ci-dessous</p>
+                <a href='http://localhost/blogdev/activate?mail=$mail'>activation du compte</a>";
+                sendMail($mail, $subject, $emailMessage, $login_smtp, $mdp_smtp);
                 $message = "le compte $nom à été ajouté en BDD";
             }
             //test sinon le compte existe

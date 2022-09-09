@@ -2,8 +2,6 @@
     $namePage = "Create Article";
     $message = "";
     //import des ressources
-    include './utils/bddConnect.php';
-    include './utils/functions.php';
     include './model/article.php';
     include './model/categorie.php';
     include './view/view_header.php';
@@ -75,7 +73,17 @@
 
                 createArticleV3($bdd,$nomArticle, $contenuArticle, $dateArticle, $idCat,$emplacement);
                 //message de confirmation
+                $hash = $util->getTokenUtil();
                 $message = "l'article $nomArticle à été ajouté en BDD";
+                $userMail = $mail_util;
+                $subject = utf8_decode("Vérification de votre compte secu");
+                $emailMessage = "<a href='http://localhost/secu/activate?id=$hash'>
+                Activer votre compte utilisateur</a>";
+                //envoi du mail d'activation
+                $util->sendMail2($userMail, $subject, $emailMessage,
+                $login_smtp, $mdp_smtp);
+                //message de confirmation
+                $message = "<br>Le compte $name_util à été ajouté";
             }
             else
             {

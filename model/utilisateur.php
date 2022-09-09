@@ -1,4 +1,7 @@
 <?php
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
     function createUser($bdd,$nom, $prenom, $mail, $password){
         try {
             $req = $bdd->query("INSERT INTO utilisateur(nom_util, prenom_util, mail_util,
@@ -27,15 +30,16 @@
             die('Erreur : '.$e->getMessage());
         }
     }
-    function createUserV3($bdd,$nom, $prenom, $mail, $password, $img){
+    function createUserV3($bdd,$nom, $prenom, $mail, $password, $img, $validate){
         try {
             $req = $bdd->prepare("INSERT INTO utilisateur(nom_util, prenom_util, mail_util,
-            password_util, img_util)VALUES(?, ?, ?, ?, ?)");
+            password_util, img_util, validate_util)VALUES(?, ?, ?, ?, ?, ?)");
             $req->bindParam(1, $nom, PDO::PARAM_STR);
             $req->bindParam(2, $prenom, PDO::PARAM_STR);
             $req->bindParam(3, $mail, PDO::PARAM_STR);
             $req->bindParam(4, $password, PDO::PARAM_STR);
             $req->bindParam(5, $img, PDO::PARAM_STR);
+            $req->bindParam(6, $validate, PDO::PARAM_BOOL);
             $req->execute();
         } 
         catch (Exception $e) 
@@ -51,7 +55,7 @@
         {
             //stocker et évaluer la requête
             $req = $bdd->prepare("SELECT id_util, nom_util, prenom_util,
-            mail_util, password_util FROM utilisateur WHERE mail_util = ?");
+            mail_util, password_util,img_util FROM utilisateur WHERE mail_util = ?");
             //binder la valeur $mail au ?
             $req->bindParam(1, $mail, PDO::PARAM_STR);
             //exécuter la requête
@@ -67,4 +71,52 @@
             die('Erreur : '.$e->getMessage());
         }
     }
+    function sendMail(?string $userMail, ?string $subject, ?string $emailMessage,
+        ?string $login_smtp, ?string $mdp_smtp)
+        {
+            require './vendor/autoload.php';
+            //Create an instance; passing `true` enables exceptions
+            $mail = new PHPMailer(true);
+            try {
+                //Server settings
+                $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      
+                $mail->isSMTP();                                            
+                $mail->Host       = 'smtp.laposte.net';                     
+                $mail->SMTPAuth   = true;                                  
+                $mail->Username   = $login_smtp;                     
+                $mail->Password   = $mdp_smtp;                               
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            
+                $mail->Port       = 465;                                    
+                //Recipients
+                $mail->setFrom($login_smtp, 'secu');
+                $mail->addAddress($userMail);     
+                $mail->isHTML(true);                                 
+                $mail->Subject = $subject;
+                $mail->Body    = $emailMessage;
+                $mail->send();
+                echo 'Message has been sent';
+            } 
+            catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
+        }
+        //fonction qui retourne un tableau associatif d'un utilisateur null (ex :?string)
+    function activateUserByMail($bdd, $mail): void
+    {
+        try 
+        {
+            //stocker et évaluer la requête
+            $req = $bdd->prepare(" UPDATE  utilisateur SET validate_util = 1 WHERE mail_util = ?");
+            //binder la valeur $mail au ?
+            $req->bindParam(1, $mail, PDO::PARAM_STR);
+            //exécuter la requête
+            $req->execute();
+        } 
+        catch (Exception $e) 
+        {
+            //affichage d'une exception en cas d’erreur
+            die('Erreur : '.$e->getMessage());
+        }
+    }
+    
 ?>
