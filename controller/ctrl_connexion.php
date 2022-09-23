@@ -14,25 +14,41 @@
             //récupérer si l'utilisateur existe
             $exist = showUserByMail($bdd, $mail);
             //tester si l'utilisateur existe
-            if(!empty($exist)){
-                //stocker le hash du mot de passe (depuis la bdd)
-                $hash = $exist[0]['password_util'];
-                //tester si le mot de passe correspond
-                if(password_verify($password, $hash)){
-                    //stocker les informations dans session
-                    $_SESSION['connected'] = true;
-                    $_SESSION['mail'] = $exist[0]['mail_util'];
-                    $_SESSION['nom'] = $exist[0]['nom_util'];
-                    $_SESSION['prenom'] = $exist[0]['prenom_util'];
-                    $_SESSION['img'] = $exist[0]['img_util'];
-                    //redirection vers ./connexion
-                    header('Location: ./connexion');
+            if(!empty($exist))
+            {
+                //tester si validate_util ==1
+                if($exist[0]['validate_util'] != 1)
+                {
+                    //redirection vers la page  de redirection
+                    header('Location: ./activate?mail='.$mail.'');
+                     //stocker le hash du mot de passe (depuis la bdd)
+                    $hash = $exist[0]['password_util'];
                 }
-                //test si le mot de passe n'est pas correct
-                else{
-                    $message = "Les informations ne sont pas valides";
-                }
+                  //test si le compte est activé
+                else
+                {
+                    //tester si le mot de passe correspond
+                    if(password_verify($password, $hash))
+                    {
+                        //stocker les informations dans session
+                        $_SESSION['connected'] = true;
+                        $_SESSION['mail'] = $exist[0]['mail_util'];
+                        $_SESSION['nom'] = $exist[0]['nom_util'];
+                        $_SESSION['prenom'] = $exist[0]['prenom_util'];
+                        $_SESSION['img'] = $exist[0]['img_util'];
+                        $_SESSION['id'] = $exist[0]['id_util'];
+                        //redirection vers ./connexion
+                        header('Location: ./connexion');
+                    }
+                     //test si le mot de passe n'est pas correct
+                    else
+                    {
+                        $message = "Les informations ne sont pas valides";
+                    }
+                }      
+               
             }
+               
             //test si l'utilisateur n'existe pas
             else{
                 $message = "Les informations ne sont pas valides";

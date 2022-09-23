@@ -3,7 +3,8 @@
     include './view/view_activate_account.php';
     $message = "";
     //test si $_GET['mail'] existe et est non vide
-    if(isset($_GET['mail']) AND $_GET['mail'] !=""){
+    if(isset($_GET['mail']) AND $_GET['mail'] !="")
+    {
         //nettoyer le contenu de $_GET['mail']
         $mail = cleanInput($_GET['mail']);
         //instance de ManagerUtil
@@ -13,17 +14,22 @@
         //récupére l'utilisateur
         $exist = showUserByMail($bdd, $mail);
         //test si l'utilisateur existe
-        if($exist != null){
+        if(!empty($exist))
+        {
             //active le compte
             // $util->activateUtil($bdd);
             activateUserByMail($bdd, $mail);
             $message = "Le compte à été activé";
+
+            header('refresh: 2; url=./connexion');
         }
         //l'utilisateur n'existe pas
-        else{
+        else
+        {
             $message = "erreur impossible d'activer le compte";
         }
     }
+        
     //$_GET['id'] n'existe pas ou vide
     else{
         $message = "Erreur aucun Paramètres";

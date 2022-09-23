@@ -1,3 +1,6 @@
+<?php
+    ob_start();
+?>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -7,3 +10,6 @@
     <script src="./asset/script/script.js" defer></script>
     <title><?php echo $namePage ?></title>
 </head>
+<?php
+    $footer = ob_clean();
+?>

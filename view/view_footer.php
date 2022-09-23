@@ -1,10 +1,15 @@
+<?php
+    ob_start();
+?>
 <footer>
     <ul>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li><span><a href="" target="_blank" >conditions</a></span></li>
+        <li><span><a href="" target="_blank" >nous contacter</a></span></li>
+        <li><span><a href="" target="_blank" >reseaux sociaux</a></span></li>
+
     </ul>
 </footer>
     
-</body>
-</html>
+<?php
+    $footer = ob_clean();
+?>

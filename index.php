@@ -14,6 +14,12 @@
         case '/blogdev/':
             include './home.php';
             break;
+        case '/blogdev/template';
+            include './controller/ctrl_template.php';
+            break;
+        case '/addCom':
+            include './controller/ctrl_add_comp.php';
+            break;
         case '/blogdev/connexion':
             include './controller/ctrl_connexion.php';
             break;
